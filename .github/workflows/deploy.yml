@@ -39,9 +39,23 @@ jobs:
           # so instead query the list and filter by name; the output is just the
           # bare zone (e.g. us-east1-a).
           INSTANCE="${{ secrets.GCP_VM_INSTANCE }}"
+
+          # debug: show all instances we can see in this project so we can
+          # verify the name and zone are correct if detection fails.
+          echo "Listing instances for debugging:"
+          gcloud compute instances list --format="table(name,zone)"
+
           ZONE=$(gcloud compute instances list \
             --filter="name=$INSTANCE" \
             --format="value(zone)")
+
+          # allow an explicit secret as a fallback if automatic detection
+          # doesn't work (e.g. wrong project or permissions). this keeps
+          # compatibility with older workflows.
+          if [ -z "$ZONE" ] && [ -n "${{ secrets.GCP_VM_ZONE }}" ]; then
+            echo "Warning: auto-detection failed, using GCP_VM_ZONE secret"
+            ZONE="${{ secrets.GCP_VM_ZONE }}"
+          fi
 
           if [ -z "$ZONE" ]; then
             echo "ERROR: could not determine zone for instance $INSTANCE"
@@ -50,4 +64,4 @@ jobs:
 
           gcloud compute ssh "$INSTANCE" \
             --zone="$ZONE" \
-            --command="cd /path/to/proxy && docker-compose pull && docker-compose up -d"
+            --command="docker-compose pull && docker-compose up -d"
