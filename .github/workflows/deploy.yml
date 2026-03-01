@@ -35,11 +35,13 @@ jobs:
           fi
 
           # determine the instance's zone dynamically so we don't have to store
-          # it in a separate secret. the `describe` command returns a fully
-          # qualified zone URL, so strip off the path component.
+          # it in a separate secret. using `describe` without a zone fails,
+          # so instead query the list and filter by name; the output is just the
+          # bare zone (e.g. us-east1-a).
           INSTANCE="${{ secrets.GCP_VM_INSTANCE }}"
-          ZONE=$(gcloud compute instances describe "$INSTANCE" \
-            --format='get(zone)' | awk -F/ '{print $NF}')
+          ZONE=$(gcloud compute instances list \
+            --filter="name=$INSTANCE" \
+            --format="value(zone)")
 
           if [ -z "$ZONE" ]; then
             echo "ERROR: could not determine zone for instance $INSTANCE"
