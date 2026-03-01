@@ -11,16 +11,17 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
       - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+        uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT }}
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
 
-      # `setup-gcloud` has already authenticated using the service account
-      # JSON passed via `GCP_SA_KEY`. Make sure the secret contains the JSON
-      # credentials (not a .p12 file, which triggers the "Missing required
-      # argument [ACCOUNT]" error).
+      # Authentication has been performed by the `auth` step above.
       - name: Confirm authentication
         run: |
           gcloud auth list
