@@ -46,7 +46,7 @@ jobs:
           echo "Listing instances for debugging:"
           gcloud compute instances list --format="table(name,zone)"
 
-          ZONE=$(/snap/bin/gcloud compute instances list --format="value(zone)")
+          ZONE=$(gcloud compute instances list --format="value(zone)")
 
           echo "detected zone='$ZONE' for instance '$INSTANCE'"
 
