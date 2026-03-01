@@ -29,6 +29,7 @@ jobs:
 
       - name: SSH to VM and update proxy
         run: |
+          set -x
           if [ -z "${{ secrets.GCP_VM_INSTANCE }}" ]; then
             echo "ERROR: GCP_VM_INSTANCE secret must be set"
             exit 1
@@ -45,14 +46,9 @@ jobs:
           echo "Listing instances for debugging:"
           gcloud compute instances list --format="table(name,zone)"
 
-          # attempt to extract the zone directly from the listing using awk, in
-          # case the filter expression isn't matching for some reason. this
-          # avoids quoting issues altogether.
-          ZONE=$(gcloud compute instances list --format="value(name,zone)" \  
-            | awk -v inst="$INSTANCE" '$1 == inst {print $2}')
+          ZONE=$(/snap/bin/gcloud compute instances list --format="value(zone)")
 
           echo "detected zone='$ZONE' for instance '$INSTANCE'"
-
 
           if [ -z "$ZONE" ]; then
             echo "ERROR: could not determine zone for instance $INSTANCE"
