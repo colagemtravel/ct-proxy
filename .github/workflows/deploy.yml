@@ -29,6 +29,13 @@ jobs:
 
       - name: SSH to VM and update proxy
         run: |
+          if [ -z "${{ secrets.GCP_VM_INSTANCE }}" ] || [ -z "${{ secrets.GCP_VM_ZONE }}" ]; then
+            echo "ERROR: GCP_VM_INSTANCE and GCP_VM_ZONE secrets must be set"
+            exit 1
+          fi
+
+          # gcloud compute ssh requires the instance name and zone; if they
+          # are empty the command will fail with "could not parse resource".
           gcloud compute ssh "${{ secrets.GCP_VM_INSTANCE }}" \
             --zone="${{ secrets.GCP_VM_ZONE }}" \
             --command="cd /path/to/proxy && docker-compose pull && docker-compose up -d"
