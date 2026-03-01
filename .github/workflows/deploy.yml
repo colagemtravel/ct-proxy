@@ -45,9 +45,13 @@ jobs:
           echo "Listing instances for debugging:"
           gcloud compute instances list --format="table(name,zone)"
 
-          ZONE=$(gcloud compute instances list \
-            --filter="name=$INSTANCE" \
-            --format="value(zone)")
+          # attempt to extract the zone directly from the listing using awk, in
+          # case the filter expression isn't matching for some reason. this
+          # avoids quoting issues altogether.
+          ZONE=$(gcloud compute instances list --format="value(name,zone)" \  
+            | awk -v inst="$INSTANCE" '$1 == inst {print $2}')
+
+          echo "detected zone='$ZONE' for instance '$INSTANCE'"
 
 
           if [ -z "$ZONE" ]; then
