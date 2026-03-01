@@ -3,12 +3,12 @@ auto.colagemtravel.com {
 
     route /webhook* {
         uri replace /webhook /
-        reverse_proxy webhook:3000
+        reverse_proxy ct-webhook:3000
     }
 
     route /reminders* {
         uri replace /reminders /
-        reverse_proxy reminders:3000
+        reverse_proxy ct-reminders:3000
     }
 
     # add additional routes as you spin up services
