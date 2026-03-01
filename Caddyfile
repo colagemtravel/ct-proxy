@@ -1,0 +1,16 @@
+auto.colagemtravel.com {
+    encode gzip
+
+    route /webhook* {
+        uri replace /webhook /
+        reverse_proxy webhook:3000
+    }
+
+    route /reminders* {
+        uri replace /reminders /
+        reverse_proxy reminders:3000
+    }
+
+    # add additional routes as you spin up services
+    # e.g. /crm -> crm:3000, /auth -> auth:3000
+}

@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Caddyfile defines all of the routing rules for the various
+      # micro‑services. Keep it under source control so you can review
+      # changes when you add/remove routes.
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # persistent storage for TLS certificates and config
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - proxy-net
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  proxy-net:
+    driver: bridge
