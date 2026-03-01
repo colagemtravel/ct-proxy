@@ -58,7 +58,13 @@ jobs:
           # pwd
           pwd
           ls -la
-          
+
+          # copy the compose file and Caddyfile to the VM so the latest
+          # configuration is used. adjust the remote path as necessary.
+          gcloud compute scp --zone="$ZONE" \
+            ./docker-compose.yml ./Caddyfile \
+            "$INSTANCE":~/ct-proxy/
+
           gcloud compute ssh "$INSTANCE" \
             --zone="$ZONE" \
-            --command="docker-compose pull && docker-compose up -d"
+            --command="cd ~/ct-proxy && docker-compose pull && docker-compose up -d"
