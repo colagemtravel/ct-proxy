@@ -55,6 +55,10 @@ jobs:
             exit 1
           fi
 
+          # pwd
+          pwd
+          ls -la
+          
           gcloud compute ssh "$INSTANCE" \
             --zone="$ZONE" \
             --command="docker-compose pull && docker-compose up -d"
