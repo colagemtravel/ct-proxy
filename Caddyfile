@@ -14,13 +14,12 @@ auto.colagemtravel.com {
         format console
     }
 
-    route /webhook* {
-        # uri replace /webhook /
+    handle /webhook* {
         reverse_proxy ct-webhook:3000
     }
 
-    route /reminders* {
-        uri replace /reminders /
+    handle /reminders* {
+        uri strip_prefix /reminders
         reverse_proxy ct-reminders:3000
     }
 }
