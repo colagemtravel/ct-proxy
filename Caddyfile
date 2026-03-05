@@ -2,7 +2,7 @@ auto.colagemtravel.com {
     encode gzip
 
     route /webhook* {
-        uri replace /webhook /
+#        uri replace /webhook /
         reverse_proxy ct-webhook:3000
     }
 
