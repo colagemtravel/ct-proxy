@@ -22,7 +22,7 @@ auto.colagemtravel.com {
     }
 
     # Move this to the top to ensure it matches
-    reverse_proxy /webhook* ct-webhook:3000
+    reverse_proxy /webhook* localhost:3000
 
     handle_path /reminders* {
         reverse_proxy ct-reminders:3000
