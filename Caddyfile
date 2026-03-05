@@ -5,6 +5,14 @@
     }
 }
 
+:80, :443 {
+    log {
+        output stderr
+        format console
+    }
+    respond "Global catch-all for host {host} on path {path}" 404
+}
+
 auto.colagemtravel.com {
     encode gzip
 
@@ -25,4 +33,3 @@ auto.colagemtravel.com {
         respond "Site block matched but no path matched: {path}" 404
     }
 }
-
