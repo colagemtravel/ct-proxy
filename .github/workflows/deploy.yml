@@ -67,4 +67,4 @@ jobs:
 
           gcloud compute ssh "$INSTANCE" \
             --zone="$ZONE" \
-            --command="cd ~/ct-proxy && docker-compose pull && docker-compose up -d"
+            --command="cd ~/ct-proxy && docker-compose pull && docker-compose restart"
