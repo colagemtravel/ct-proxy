@@ -1,8 +1,21 @@
+{
+    log {
+        output stderr
+        format console
+    }
+}
+
 auto.colagemtravel.com {
     encode gzip
 
+    # Log specific to this domain
+    log {
+        output stderr
+        format console
+    }
+
     route /webhook* {
-#        uri replace /webhook /
+        # uri replace /webhook /
         reverse_proxy ct-webhook:3000
     }
 
@@ -10,7 +23,5 @@ auto.colagemtravel.com {
         uri replace /reminders /
         reverse_proxy ct-reminders:3000
     }
-
-    # add additional routes as you spin up services
-    # e.g. /crm -> crm:3000, /auth -> auth:3000
 }
+
